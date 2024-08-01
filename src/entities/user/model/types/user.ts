@@ -1,7 +1,7 @@
 export interface User {
-  id: string
+  id?: string
   name: string
   email: string
-  bio: string
+  bio: string | undefined
   profilePicture: string
 }

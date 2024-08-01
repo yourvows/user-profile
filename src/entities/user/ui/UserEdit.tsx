@@ -1,4 +1,7 @@
-import { useState, FC, FormEvent } from 'react'
+import { FC } from 'react'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import { useMutation, useQueryClient } from 'react-query'
 import { Wrapper } from '@/features/UserProfile/ui'
 import { FromInput, FormTextarea, Button, FormGroup } from '@/shared/ui'
@@ -10,25 +13,37 @@ interface Props {
   closeEdit: () => void
 }
 
+const schema = yup
+  .object({
+    name: yup.string().required(),
+    email: yup.string().email().required(),
+    bio: yup.string(),
+  })
+  .required()
+
 export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
-  const [name, setName] = useState(user?.name)
-  const [email, setEmail] = useState(user?.email)
-  const [bio, setBio] = useState(user?.bio)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  })
 
   const { $put } = useApi()
   const client = useQueryClient()
 
-  const { mutate: updateProfile } = useMutation({
+  const { mutateAsync: updateProfileAsync } = useMutation({
     mutationFn: ({ name, email, bio, profilePicture }: User) =>
-      $put(`/user`, { name, email, bio, profilePicture }),
+      $put('/user', { name, email, bio, profilePicture }),
     onSuccess: () => {
       client.invalidateQueries('user').then(() => closeEdit())
     },
   })
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    updateProfile({
+  const onSubmit = async (data: Pick<User, 'name' | 'email' | 'bio'>) => {
+    const { name, email, bio } = data
+    await updateProfileAsync({
       name,
       email,
       bio,
@@ -48,31 +63,41 @@ export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
             Make changes to your profile here. Click save when you're done.
           </p>
         </div>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit(({ name, email, bio }) =>
+            onSubmit({ name, email, bio }),
+          )}
+        >
           <FormGroup forLabel="name" name="Name" is_required>
             <FromInput
-              value={name}
               id="name"
-              onChange={setName}
+              defaultValue={user?.name}
               placeholder="John Doe"
               autoComplete="name"
-              required
               type="text"
+              {...register('name')}
             />
+            {errors.name && <p className="text-red-500">Name is required</p>}
           </FormGroup>
           <FormGroup forLabel="email" name="Email" is_required>
             <FromInput
-              value={email}
               id="email"
-              onChange={setEmail}
+              defaultValue={user?.email}
               placeholder="john@doe.com"
               autoComplete="email"
-              required
               type="email"
+              {...register('email')}
             />
+            {errors.email && <p className="text-red-500">Email is required</p>}
           </FormGroup>
           <FormGroup forLabel="bio" name="Bio">
-            <FormTextarea id="bio" value={bio} onChange={setBio} />
+            <FormTextarea
+              defaultValue={user?.bio}
+              id="bio"
+              {...register('bio')}
+            />
           </FormGroup>
           <div className="flex justify-end gap-4">
             <Button onClick={closeEdit} className="!bg-gray-400">
