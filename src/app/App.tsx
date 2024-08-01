@@ -5,7 +5,7 @@ import { useUserQuery } from '@/shared/api'
 const App: FC = () => {
   const { data: user, isLoading, isSuccess } = useUserQuery()
   return (
-    <div className="container flex justify-center items-center h-screen">
+    <div className="container h-screen">
       {isLoading && (
         <div className="animate-spin border-4 size-10 rounded-full border-dotted border-black"></div>
       )}
