@@ -7,7 +7,13 @@ interface Props {
   type?: string
   autoComplete?: string
 }
-export const FromInput: FC<Props> = ({ value, onChange, required, type, autoComplete }) => {
+export const FromInput: FC<Props> = ({
+  value,
+  onChange,
+  required,
+  type,
+  autoComplete,
+}) => {
   return (
     <>
       <input

@@ -1,7 +1,8 @@
 import { createRoot } from 'react-dom/client'
+import React from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import './index.css'
 import App from './app/App.tsx'
-import { QueryClient, QueryClientProvider } from 'react-query'
 
 const queryClient = new QueryClient()
 
@@ -17,8 +18,10 @@ async function enableMocking() {
 
 enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>,
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </React.StrictMode>,
   )
 })

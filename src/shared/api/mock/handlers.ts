@@ -13,7 +13,8 @@ const initialUser: User = {
   name: 'John Doe',
   email: 'john.doe@example.com',
   bio: 'Software Developer',
-  profilePicture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+  profilePicture:
+    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
 }
 
 let user = { ...initialUser }

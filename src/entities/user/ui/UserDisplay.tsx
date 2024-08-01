@@ -11,7 +11,7 @@ interface Props {
 export const UserDisplay: FC<Props> = ({ user, onEdit }) => {
   function getUserName(name: string) {
     if (!name) return ''
-    const nameArray = name?.split(' ')
+    const nameArray = name.split(' ')
     return nameArray[0][0] + nameArray[1][0]
   }
 
@@ -44,18 +44,27 @@ export const UserDisplay: FC<Props> = ({ user, onEdit }) => {
             <h3 className="text-lg font-semibold">About</h3>
             <p className="text-gray-500">{user?.bio}</p>
           </div>
-          <div data-orientation="horizontal" role="none" className="shrink-0 bg-gray-500/20 h-[1px] w-full"></div>
+          <div
+            data-orientation="horizontal"
+            role="none"
+            className="shrink-0 bg-gray-500/20 h-[1px] w-full"
+          />
           <div className="grid gap-2">
             <h3 className="text-lg font-semibold">Contact</h3>
             <div className="grid gap-1 text-muted-foreground">
               <div>
-                <span className="font-medium">Email:</span> <a href={`mailto:${user?.email}`}>{user?.email}</a>
+                <span className="font-medium">Email:</span>{' '}
+                <a href={`mailto:${user?.email}`}>{user?.email}</a>
               </div>
             </div>
           </div>
-          <div data-orientation="horizontal" role="none" className="shrink-0 bg-gray-500/20 h-[1px] w-full"></div>
+          <div
+            data-orientation="horizontal"
+            role="none"
+            className="shrink-0 bg-gray-500/20 h-[1px] w-full"
+          />
           <div className="flex justify-end">
-            <Button onClick={() => onEdit}>Edit</Button>
+            <Button onClick={() => onEdit()}>Edit</Button>
           </div>
         </div>
       </div>

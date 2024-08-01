@@ -5,7 +5,7 @@ export const useApi = () => {
     const headersObj: any = {
       ...options?.headers,
     }
-
+    axios.put('/nma')
     return axios.create({
       ...options,
       headers: {
@@ -14,7 +14,10 @@ export const useApi = () => {
     })
   }
 
-  function $get<T = never>(endpoint: string, options?: AxiosRequestConfig): Promise<T> {
+  function $get<T = never>(
+    endpoint: string,
+    options?: AxiosRequestConfig,
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
       $service(options)(endpoint)
         .then((response: T | any) => {
@@ -24,7 +27,10 @@ export const useApi = () => {
     })
   }
 
-  function $put<T = never>(endpoint: string, options: AxiosRequestConfig): Promise<AxiosResponse> {
+  function $put<T = never>(
+    endpoint: string,
+    options: AxiosRequestConfig,
+  ): Promise<AxiosResponse> {
     return new Promise((resolve, reject) => {
       $service({ ...options, method: 'PUT' })(endpoint)
         .then((response: T | any) => resolve(response.data))
@@ -32,7 +38,10 @@ export const useApi = () => {
     })
   }
 
-  function $post<T = never>(endpoint: string, options?: AxiosRequestConfig): Promise<AxiosResponse> {
+  function $post<T = never>(
+    endpoint: string,
+    options?: AxiosRequestConfig,
+  ): Promise<AxiosResponse> {
     return new Promise((resolve, reject) => {
       $service({ ...options, method: 'POST' })(endpoint)
         .then((response: T | any) => resolve(response.data))
@@ -40,7 +49,10 @@ export const useApi = () => {
     })
   }
 
-  function $delete<T = never>(endpoint: string, options?: AxiosRequestConfig): Promise<AxiosResponse> {
+  function $delete<T = never>(
+    endpoint: string,
+    options?: AxiosRequestConfig,
+  ): Promise<AxiosResponse> {
     return new Promise((resolve, reject) => {
       $service({ ...options, method: 'DELETE' })(endpoint)
         .then((response: T | any) => {

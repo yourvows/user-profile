@@ -7,22 +7,21 @@ import { User } from '@/entities/user/model/types/user.ts'
 
 export const UserProfile: FC = () => {
   const [isEditing, setIsEditing] = useState(false)
-  const { $get, $put } = useApi()
-  const { data: user } = useQuery({
+
+  const { $get } = useApi()
+
+  const { data: user, isSuccess } = useQuery({
     queryKey: ['user'],
     queryFn: () => $get<User>('/user'),
   })
 
-  async function save(params: User) {
-    await $put('/user', { params })
-    setIsEditing(false)
-  }
-
   return (
     <>
-      {isEditing
-        ? user && <UserEdit user={user} onSave={save} />
-        : user && <UserDisplay onEdit={() => setIsEditing(true)} user={user} />}
+      {!isEditing
+        ? isSuccess && <UserEdit user={user} />
+        : isSuccess && (
+            <UserDisplay onEdit={() => setIsEditing(true)} user={user} />
+          )}
     </>
   )
 }
