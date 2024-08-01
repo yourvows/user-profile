@@ -1,15 +1,16 @@
 import { useState, FC, FormEvent } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { Wrapper } from '@/features/UserProfile/ui/Wrapper'
+import { Wrapper } from '@/features/UserProfile/ui'
 import { FromInput, FormTextarea, Button, FormGroup } from '@/shared/ui'
-import { User } from '@/entities/user/model/types/user.ts'
 import { useApi } from '@/shared/api'
+import type { User } from '@/entities/user/model/types/user.ts'
 
 interface Props {
   user: User
+  closeEdit: () => void
 }
 
-export const UserEdit: FC<Props> = ({ user }) => {
+export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
   const [name, setName] = useState(user?.name)
   const [email, setEmail] = useState(user?.email)
   const [bio, setBio] = useState(user?.bio)
@@ -21,7 +22,7 @@ export const UserEdit: FC<Props> = ({ user }) => {
     mutationFn: ({ name, email, bio, profilePicture }: User) =>
       $put(`/user`, { name, email, bio, profilePicture }),
     onSuccess: () => {
-      client.invalidateQueries('user').then(() => {})
+      client.invalidateQueries('user').then(() => closeEdit())
     },
   })
 
@@ -48,29 +49,35 @@ export const UserEdit: FC<Props> = ({ user }) => {
           </p>
         </div>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <FormGroup name="Name" is_required>
+          <FormGroup forLabel="name" name="Name" is_required>
             <FromInput
               value={name}
+              id="name"
               onChange={setName}
+              placeholder="John Doe"
               autoComplete="name"
               required
               type="text"
             />
           </FormGroup>
-          <FormGroup name="Email" is_required>
+          <FormGroup forLabel="email" name="Email" is_required>
             <FromInput
               value={email}
+              id="email"
               onChange={setEmail}
+              placeholder="john@doe.com"
               autoComplete="email"
               required
               type="email"
             />
           </FormGroup>
-          <FormGroup name="Bio">
-            <FormTextarea value={bio} onChange={setBio} />
+          <FormGroup forLabel="bio" name="Bio">
+            <FormTextarea id="bio" value={bio} onChange={setBio} />
           </FormGroup>
           <div className="flex justify-end gap-4">
-            <Button className="!bg-gray-400">Cancel</Button>
+            <Button onClick={closeEdit} className="!bg-gray-400">
+              Cancel
+            </Button>
             <Button type="submit">Save</Button>
           </div>
         </form>

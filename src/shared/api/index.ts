@@ -1,3 +1,4 @@
-import { useApi } from './axios.ts'
+import { useApi } from './hooks/useApi.ts'
+import { useUserQuery } from './hooks/useUserQuery.tsx'
 
-export { useApi }
+export { useApi, useUserQuery }

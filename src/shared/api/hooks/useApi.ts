@@ -2,16 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 export const useApi = () => {
   function $service(options?: AxiosRequestConfig) {
-    const headersObj: any = {
-      ...options?.headers,
-    }
-    axios.put('/nma')
-    return axios.create({
-      ...options,
-      headers: {
-        ...headersObj,
-      },
-    })
+    return axios.create(options)
   }
 
   function $get<T = never>(
@@ -19,32 +10,35 @@ export const useApi = () => {
     options?: AxiosRequestConfig,
   ): Promise<T> {
     return new Promise((resolve, reject) => {
-      $service(options)(endpoint)
-        .then((response: T | any) => {
-          resolve(response.data)
-        })
+      $service(options)
+        .get(endpoint)
+        .then((response: AxiosResponse<T>) => resolve(response.data))
         .catch((error) => reject(error.response))
     })
   }
 
   function $put<T = never>(
     endpoint: string,
-    options: AxiosRequestConfig,
-  ): Promise<AxiosResponse> {
+    data?: any,
+    options?: AxiosRequestConfig,
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
-      $service({ ...options, method: 'PUT' })(endpoint)
-        .then((response: T | any) => resolve(response.data))
+      $service(options)
+        .put(endpoint, data)
+        .then((response: AxiosResponse<T>) => resolve(response.data))
         .catch((error) => reject(error.response))
     })
   }
 
   function $post<T = never>(
     endpoint: string,
+    data?: any,
     options?: AxiosRequestConfig,
-  ): Promise<AxiosResponse> {
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
-      $service({ ...options, method: 'POST' })(endpoint)
-        .then((response: T | any) => resolve(response.data))
+      $service(options)
+        .post(endpoint, data)
+        .then((response: AxiosResponse<T>) => resolve(response.data))
         .catch((error) => reject(error.response))
     })
   }
@@ -52,12 +46,11 @@ export const useApi = () => {
   function $delete<T = never>(
     endpoint: string,
     options?: AxiosRequestConfig,
-  ): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse<T>> {
     return new Promise((resolve, reject) => {
-      $service({ ...options, method: 'DELETE' })(endpoint)
-        .then((response: T | any) => {
-          resolve(response)
-        })
+      $service(options)
+        .delete(endpoint)
+        .then((response: AxiosResponse<T>) => resolve(response))
         .catch((error) => reject(error.response))
     })
   }

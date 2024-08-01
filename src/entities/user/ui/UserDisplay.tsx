@@ -1,7 +1,7 @@
 import { FC } from 'react'
-import { Wrapper } from '@/features/UserProfile/ui/Wrapper'
+import { Wrapper } from '@/features/UserProfile/ui'
 import { User } from '@/entities/user/model/types/user.ts'
-import { Button } from '@/shared/ui/Button.tsx'
+import { Button } from '@/shared/ui'
 
 interface Props {
   user: User
@@ -64,7 +64,7 @@ export const UserDisplay: FC<Props> = ({ user, onEdit }) => {
             className="shrink-0 bg-gray-500/20 h-[1px] w-full"
           />
           <div className="flex justify-end">
-            <Button onClick={() => onEdit()}>Edit</Button>
+            <Button onClick={onEdit}>Edit</Button>
           </div>
         </div>
       </div>
