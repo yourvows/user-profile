@@ -28,7 +28,7 @@ export const UserDisplay: FC<Props> = ({ user, onEdit }) => {
               alt="Profile Picture"
             />
           ) : (
-            <span className="relative flex shrink-0 overflow-hidden rounded-full w-16 h-16">
+            <span className="relative flex h-16 w-16 shrink-0 overflow-hidden rounded-full">
               <span className="flex h-full w-full items-center justify-center rounded-full bg-gray-200">
                 {getUserName(user?.name)}
               </span>
@@ -47,11 +47,11 @@ export const UserDisplay: FC<Props> = ({ user, onEdit }) => {
           <div
             data-orientation="horizontal"
             role="none"
-            className="shrink-0 bg-gray-500/20 h-[1px] w-full"
+            className="h-[1px] w-full shrink-0 bg-gray-500/20"
           />
           <div className="grid gap-2">
             <h3 className="text-lg font-semibold">Contact</h3>
-            <div className="grid gap-1 text-muted-foreground">
+            <div className="text-muted-foreground grid gap-1">
               <div>
                 <span className="font-medium">Email:</span>{' '}
                 <a href={`mailto:${user?.email}`}>{user?.email}</a>
@@ -61,7 +61,7 @@ export const UserDisplay: FC<Props> = ({ user, onEdit }) => {
           <div
             data-orientation="horizontal"
             role="none"
-            className="shrink-0 bg-gray-500/20 h-[1px] w-full"
+            className="h-[1px] w-full shrink-0 bg-gray-500/20"
           />
           <div className="flex justify-end">
             <Button onClick={onEdit}>Edit</Button>

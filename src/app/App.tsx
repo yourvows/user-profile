@@ -1,14 +1,13 @@
 import { FC } from 'react'
 import { UserProfile } from '@/features/UserProfile/ui/UserProfile'
 import { useUserQuery } from '@/shared/api'
+import { Spinner } from '@/shared/ui'
 
 const App: FC = () => {
   const { data: user, isLoading, isSuccess } = useUserQuery()
   return (
-    <div className="container h-screen">
-      {isLoading && (
-        <div className="animate-spin border-4 size-10 rounded-full border-dotted border-black"></div>
-      )}
+    <div className="container grid h-screen place-items-center">
+      {isLoading && <Spinner />}
       {isSuccess && <UserProfile user={user} />}
     </div>
   )

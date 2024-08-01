@@ -1,11 +1,11 @@
 import { FC } from 'react'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
+import { useApi } from '@/shared/api'
 import { Wrapper } from '@/features/UserProfile/ui'
 import { FromInput, FormTextarea, Button, FormGroup } from '@/shared/ui'
-import { useApi } from '@/shared/api'
 import type { User } from '@/entities/user/model/types/user.ts'
 
 interface Props {
@@ -33,7 +33,7 @@ export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
   const { $put } = useApi()
   const client = useQueryClient()
 
-  const { mutateAsync: updateProfileAsync } = useMutation({
+  const { mutateAsync: updateProfileAsync, isLoading } = useMutation({
     mutationFn: ({ name, email, bio, profilePicture }: User) =>
       $put('/user', { name, email, bio, profilePicture }),
     onSuccess: () => {
@@ -77,9 +77,12 @@ export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
               placeholder="John Doe"
               autoComplete="name"
               type="text"
+              disabled={isLoading}
               {...register('name')}
             />
-            {errors.name && <p className="text-red-500">Name is required</p>}
+            {errors.name && (
+              <p className="text-sm text-red-500">Name is required</p>
+            )}
           </FormGroup>
           <FormGroup forLabel="email" name="Email" is_required>
             <FromInput
@@ -88,22 +91,33 @@ export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
               placeholder="john@doe.com"
               autoComplete="email"
               type="email"
+              disabled={isLoading}
               {...register('email')}
             />
-            {errors.email && <p className="text-red-500">Email is required</p>}
+            {errors.email && (
+              <p className="text-sm text-red-500">Email is required</p>
+            )}
           </FormGroup>
           <FormGroup forLabel="bio" name="Bio">
             <FormTextarea
               defaultValue={user?.bio}
               id="bio"
+              disabled={isLoading}
               {...register('bio')}
             />
           </FormGroup>
           <div className="flex justify-end gap-4">
-            <Button onClick={closeEdit} className="!bg-gray-400">
+            <Button
+              disabled={isLoading}
+              onClick={closeEdit}
+              type="button"
+              className="!bg-gray-400"
+            >
               Cancel
             </Button>
-            <Button type="submit">Save</Button>
+            <Button loading={isLoading} disabled={isLoading} type="submit">
+              Save
+            </Button>
           </div>
         </form>
       </div>

@@ -5,7 +5,7 @@ interface Props {
 }
 export const Wrapper: FC<Props> = ({ children }) => {
   return (
-    <div className="rounded-lg p-6 border bg-white text-black shadow-sm w-full max-w-md mx-auto">
+    <div className="mx-auto w-[400px] max-w-md rounded-lg border bg-white p-6 text-black shadow-sm">
       {children}
     </div>
   )

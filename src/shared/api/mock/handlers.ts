@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { sleep } from '@/shared/utils'
 
 interface User {
   id: string
@@ -18,11 +19,13 @@ const user: User = {
 }
 
 export const handlers = [
-  http.get('/user', () => {
+  http.get('/user', async () => {
+    await sleep(2000)
     return HttpResponse.json(user, { status: 200 })
   }),
 
   http.put('/user', async () => {
+    await sleep(2000)
     return HttpResponse.json({ success: true }, { status: 200 })
   }),
 ]

@@ -1,13 +1,16 @@
-import { FC, ReactNode } from 'react'
+import { ButtonHTMLAttributes, FC, ReactNode } from 'react'
+import { Spinner } from '@/shared/ui'
 
-interface Props {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
+  loading?: boolean
   onClick?: () => void
   className?: string
   type?: 'submit' | 'reset' | 'button'
 }
 export const Button: FC<Props> = ({
   children,
+  loading,
   onClick,
   className,
   ...props
@@ -20,9 +23,9 @@ export const Button: FC<Props> = ({
     <button
       {...props}
       onClick={handleClick}
-      className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-all duration-300 ease-in-out ${className}`}
+      className={`rounded bg-blue-500 px-4 py-2 font-bold text-white transition-all duration-300 ease-in-out hover:bg-blue-700 active:scale-95 ${className}`}
     >
-      {children}
+      {loading ? <Spinner className="h-5 w-5 border-white" /> : children}
     </button>
   )
 }
