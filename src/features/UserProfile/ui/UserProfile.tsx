@@ -15,6 +15,7 @@ export const UserProfile: FC<Props> = ({ user }) => {
       <AnimatePresence mode={'wait'}>
         {isEditing ? (
           <motion.div
+            className="w-full"
             key="edit"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -26,6 +27,7 @@ export const UserProfile: FC<Props> = ({ user }) => {
         ) : (
           <motion.div
             key="display"
+            className="w-full"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
