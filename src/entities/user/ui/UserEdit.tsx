@@ -1,7 +1,5 @@
-import { FC } from 'react'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useForm } from 'react-hook-form'
+import { FC, useEffect, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 import { useApi } from '@/shared/api'
 import { Wrapper } from '@/features/UserProfile/ui'
@@ -13,43 +11,56 @@ interface Props {
   closeEdit: () => void
 }
 
-const schema = yup
-  .object({
-    name: yup.string().required(),
-    email: yup.string().email().required(),
-    bio: yup.string(),
-  })
-  .required()
-
 export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
+  const [isChanged, setIsChanged] = useState(false)
+  const { $put } = useApi()
+  const client = useQueryClient()
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm({
-    resolver: yupResolver(schema),
+    mode: 'onChange',
+    defaultValues: {
+      name: user?.name,
+      email: user?.email,
+      bio: user?.bio,
+    },
   })
 
-  const { $put } = useApi()
-  const client = useQueryClient()
+  const watchedValues = useWatch({ control })
+
+  useEffect(() => {
+    const { name, email, bio } = watchedValues
+    setIsChanged(
+      user?.name !== name || user?.email !== email || user?.bio !== bio,
+    )
+  }, [watchedValues, user])
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isChanged) event.preventDefault()
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [isChanged])
 
   const { mutateAsync: updateProfileAsync, isLoading } = useMutation({
-    mutationFn: ({ name, email, bio, profilePicture }: User) =>
-      $put('/user', { name, email, bio, profilePicture }),
+    mutationFn: ({ name, email, bio }: Pick<User, 'name' | 'email' | 'bio'>) =>
+      $put('/user', { name, email, bio }),
     onSuccess: () => {
       client.invalidateQueries('user').then(() => closeEdit())
     },
   })
 
   const onSubmit = async (data: Pick<User, 'name' | 'email' | 'bio'>) => {
-    const { name, email, bio } = data
-    await updateProfileAsync({
-      name,
-      email,
-      bio,
-      profilePicture: user?.profilePicture,
-      id: user?.id,
-    })
+    await updateProfileAsync({ ...data })
   }
 
   return (
@@ -70,37 +81,47 @@ export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
             onSubmit({ name, email, bio }),
           )}
         >
-          <FormGroup forLabel="name" name="Name" is_required>
+          <FormGroup htmlFor="name" label="Name" is_required>
             <FromInput
               id="name"
-              defaultValue={user?.name}
               placeholder="John Doe"
               autoComplete="name"
               type="text"
               disabled={isLoading}
-              {...register('name')}
+              {...register('name', {
+                required: 'Name is required',
+              })}
             />
             {errors.name && (
-              <p className="text-sm text-red-500">Name is required</p>
+              <p className="text-sm text-red-500 first-letter:capitalize">
+                {errors.name.message}
+              </p>
             )}
           </FormGroup>
-          <FormGroup forLabel="email" name="Email" is_required>
+          <FormGroup htmlFor="email" label="Email" is_required>
             <FromInput
               id="email"
-              defaultValue={user?.email}
               placeholder="john@doe.com"
               autoComplete="email"
               type="email"
               disabled={isLoading}
-              {...register('email')}
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email address',
+                },
+              })}
             />
             {errors.email && (
-              <p className="text-sm text-red-500">Email is required</p>
+              <p className="text-sm text-red-500 first-letter:capitalize">
+                {errors.email.message}
+              </p>
             )}
           </FormGroup>
-          <FormGroup forLabel="bio" name="Bio">
+          <FormGroup htmlFor="bio" label="Bio">
             <FormTextarea
-              defaultValue={user?.bio}
+              rows={3}
               id="bio"
               disabled={isLoading}
               {...register('bio')}
@@ -115,7 +136,11 @@ export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
             >
               Cancel
             </Button>
-            <Button loading={isLoading} disabled={isLoading} type="submit">
+            <Button
+              loading={isLoading}
+              disabled={isLoading || !isChanged}
+              type="submit"
+            >
               Save
             </Button>
           </div>

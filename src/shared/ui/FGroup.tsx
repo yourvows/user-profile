@@ -1,22 +1,21 @@
-import { FC, ReactNode } from 'react'
+import { FC, LabelHTMLAttributes, ReactNode } from 'react'
 
-interface Props {
+interface Props extends LabelHTMLAttributes<HTMLLabelElement> {
   children: ReactNode
-  name: string
-  forLabel?: string
+  label: string
   is_required?: boolean
 }
 
 export const FormGroup: FC<Props> = ({
   children,
-  name,
+  label,
   is_required,
-  forLabel,
+  ...props
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={forLabel}>
-        {name} {is_required && <span className="text-red-500">*</span>}
+      <label htmlFor={props.htmlFor}>
+        {label} {is_required && <span className="text-red-500">*</span>}
       </label>
       {children}
     </div>

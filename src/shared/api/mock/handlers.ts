@@ -20,12 +20,12 @@ const user: User = {
 
 export const handlers = [
   http.get('http://localhost:4000/api/user', async () => {
-    await sleep(2000)
+    await sleep(500)
     return HttpResponse.json(user, { status: 200 })
   }),
 
   http.put('http://localhost:4000/api/user', async () => {
-    await sleep(2000)
+    await sleep(500)
     return HttpResponse.json({ success: true }, { status: 200 })
   }),
 ]

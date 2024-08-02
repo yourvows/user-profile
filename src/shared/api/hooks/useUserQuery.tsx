@@ -8,6 +8,6 @@ export const useUserQuery = () => {
   return useQuery({
     queryKey: ['user'],
     queryFn: () => $get<User>('/user'),
-    onError: () => {},
+    staleTime: Infinity,
   })
 }

@@ -23,7 +23,7 @@ export const Button: FC<Props> = ({
     <button
       {...props}
       onClick={handleClick}
-      className={`rounded bg-blue-500 px-4 py-2 font-bold text-white transition-all duration-300 ease-in-out hover:bg-blue-700 active:scale-95 ${className}`}
+      className={`rounded bg-blue-500 px-4 py-2 font-bold text-white transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       {loading ? <Spinner className="h-5 w-5 border-white" /> : children}
     </button>
