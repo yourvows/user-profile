@@ -53,7 +53,7 @@ export const UserEdit: FC<Props> = ({ user, closeEdit }) => {
 
   const { mutateAsync: updateProfileAsync, isLoading } = useMutation({
     mutationFn: ({ name, email, bio }: Pick<User, 'name' | 'email' | 'bio'>) =>
-      $put('/user', { name, email, bio }),
+      $put('/api/user', { name, email, bio }),
     onSuccess: () => {
       client.invalidateQueries('user').then(() => closeEdit())
     },

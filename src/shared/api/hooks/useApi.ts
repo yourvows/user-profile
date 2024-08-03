@@ -1,10 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 export const useApi = () => {
-  const baseURL = 'http://localhost:4000/api/'
   function $service(options?: AxiosRequestConfig) {
     return axios.create({
-      baseURL,
       ...options,
     })
   }

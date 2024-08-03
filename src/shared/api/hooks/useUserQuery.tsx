@@ -7,7 +7,13 @@ export const useUserQuery = () => {
 
   return useQuery({
     queryKey: ['user'],
-    queryFn: () => $get<User>('/user'),
+    queryFn: () =>
+      $get<User>('/api/user', {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      }),
     staleTime: Infinity,
   })
 }
