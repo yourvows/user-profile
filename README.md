@@ -16,7 +16,3 @@ npm install
 ```bash
 npm run dev
 ```
-
-## Comment
-
-There is no user update functionality in the app. Because, i couldn't find how to get body parameters in mock server.
